@@ -5,7 +5,7 @@ Virtual Reality project for Unreal Engine 4.27 for testing the HP Reverb G2 VR H
 ## Omnicept SDK
 
 ## Setup 
-Complete description and images of steps are provided in [HP Developer Portal](https://developers.hp.com/omnicept/docs/fundamentals), I recommend you follow these if it is your first time using OmniceptSDK and HPGlia Plugin. 
+Complete description and images of steps are provided in [Getting Started with Omnicept] (https://developers.hp.com/omnicept/docs/fundamentals), I recommend you follow these if it is your first time using OmniceptSDK and HPGlia Plugin. 
 
 ### tl;dr
 1. Create HP Developer account and then download (and install) [Omnicept Developer SDK](https://developers.hp.com/omnicept/hp-omnicept-sdk).
