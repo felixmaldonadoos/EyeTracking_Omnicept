@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "GetCLMonitorComponentActor.h"
 //#include "PawnMain.h"
 //#include "Templates/SharedPointer.h" 
 #include "GameModeMain.generated.h"
@@ -24,8 +25,6 @@ protected:
 	AGameModeMain();
 	FVector debug_vect;
 
-protected:
-
 	APlayerController* PlayerControllerClassCast = nullptr;
 	FVector InitialPlayerLocation;
 	FRotator InitialPlayerRotation;
@@ -36,10 +35,17 @@ protected:
 	void SpawnAndPossessPlayer(FVector spawn_location, FRotator spawn_rotation);
 	//APawnMain* PlayerActor; 
 
+
+
+	/* Spawns Sensors */
+	void SpawnGetCLMonitorComponentActor();
+	AGetCLMonitorComponentActor* GetCLMonitorComponentActor = nullptr;
+
+	/* spawn everything */
+	void SpawnAllLoggingActor(); 
+	
 	/* to store waypoint info  */
 	virtual void InitGameState();
 	virtual void StartPlay() override;
-
-
 
 };

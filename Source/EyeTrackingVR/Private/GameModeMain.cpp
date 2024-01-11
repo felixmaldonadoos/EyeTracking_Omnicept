@@ -49,8 +49,35 @@ void AGameModeMain::InitGameState()
 	Super::InitGameState();
 }
 
+
+void AGameModeMain::SpawnGetCLMonitorComponentActor()
+{
+	FTransform tSpawnTransform;
+	FVector TempLoc = { 0.0f, 0.0f, 0.0f };
+	FRotator TempRot = tSpawnTransform.GetRotation().Rotator();
+
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetCLMonitorComponentActor = Cast<AGetCLMonitorComponentActor>(GetWorld()->SpawnActor(AGetCLMonitorComponentActor::StaticClass(), &TempLoc, &TempRot, SpawnInfo));
+
+}
+
+void AGameModeMain::SpawnAllLoggingActor()
+{
+	/* cognitive load sensors */
+	AGameModeMain::SpawnGetCLMonitorComponentActor();
+
+	/* eye-tracker */
+
+	/* player path */
+}
+
+
 void AGameModeMain::StartPlay()
 {
 	Super::StartPlay();
 	UE_LOG(LogTemp, Warning, TEXT("[AGameModeMain::StartPlay()] Starting game!\n"));
+
+	AGameModeMain::SpawnGetCLMonitorComponentActor();
+
 }
