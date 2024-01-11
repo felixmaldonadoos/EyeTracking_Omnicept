@@ -15,7 +15,9 @@ Complete description and images of steps are provided in [HP Developer Portal](h
 #### IMPORTANT SECURITY NOTE 
 Taken from [Unreal > Getting started](https://developers.hp.com/omnicept/docs/ue4/getting-started): 
 ```
-To prevent Client ID and Access Key values from being readable in a packaged project, enable encryption for initialization files. Under Edit -> Project Settings -> Project -> Crypto click "Generate New Encryption Key" button, then check the box for "Encrypt Pak Ini Files".
+To prevent Client ID and Access Key values from being readable in a packaged project, enable encryption for initialization
+files. Under Edit -> Project Settings -> Project -> Crypto click "Generate New Encryption Key" button, then check the box
+for "Encrypt Pak Ini Files".
 ```
 Read more [here](https://developers.hp.com/omnicept/docs/ue4/getting-started#securing).
 
