@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# HP Keys
+source/EyeTrackingVR/public/Keys.h
+
 # Compiled Object files
 *.slo
 *.lo
