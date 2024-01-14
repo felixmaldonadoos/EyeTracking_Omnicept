@@ -6,15 +6,18 @@
 #include "GetCLMonitorComponentActor.h"
 #include "EyeTrackerFunctionLibrary.h"
 #include "Misc/DateTime.h" 
+#include "Keys.h"
 #include "Kismet/GameplayStatics.h" 
 #include "Kismet/KismetStringLibrary.h" 
 
 
-void FGetCLMonitorComponentThread::ConnectToDevice() {
-	
-	UHPGliaClient::ConnectToGliaAsync(const FString clientID, const FString accessKey, const ELicensingModel requestedLicense)
-
+/* changes state of bIsConnected*/
+bool FGetCLMonitorComponentThread::ConnectToDevice() {
+	UHPGliaClient::ConnectToGliaAsync(HPGliaKeys::CLIENT_ID, HPGliaKeys::ACCESS_KEY, requestedLicense);
+	bIsConnected = UHPGliaClient::IsConnected();
+	return bIsConnected;
 }
+
 bool FGetCLMonitorComponentThread::GetEyeTracking(FEyeTracking& OutEyeTracking) {
 	return  UHPGliaClient::GetEyeTracking(EyeData);
 }
@@ -24,6 +27,8 @@ FGetCLMonitorComponentThread::FGetCLMonitorComponentThread(AGetCLMonitorComponen
 {
 	CurrentThreadActor = funActor; 
 	/* init eye-tracker */
+	bIsConnected = false;
+	FGetCLMonitorComponentThread::ConnectToDevice();
 }
 
 FGetCLMonitorComponentThread::~FGetCLMonitorComponentThread()

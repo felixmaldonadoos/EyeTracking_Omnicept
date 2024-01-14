@@ -28,7 +28,8 @@ public:
 	virtual void Stop() override;
 	virtual void Exit() override;
 
-	void ConnectToDevice();
+	bool ConnectToDevice();
+	bool bIsConnected;
 	const FString clientID;
 	const FString accessKey;
 	const ELicensingModel requestedLicense = ELicensingModel::CORE;
