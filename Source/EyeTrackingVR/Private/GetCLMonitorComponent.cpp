@@ -12,6 +12,9 @@ void UGetCLMonitorComponent::StartMonitoring() {
     cogLoadAcum = 0;
     UHPGliaDelegates* gliaDelegates = UHPGliaClient::GetGliaDelegates();
     gliaDelegates->OnCogLoadReceived.AddDynamic(this, &UGetCLMonitorComponent::RegisterCognitiveLoad);
+
+
+
 }
 
 void UGetCLMonitorComponent::StopMonitoring() {

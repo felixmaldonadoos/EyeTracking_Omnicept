@@ -12,7 +12,6 @@
 #include "Containers/Array.h" 
 #include "Kismet/GameplayStatics.h" 
 #include "GameFramework/FloatingPawnMovement.h" 
-#include "GameFramework/FloatingPawnMovement.h" 
 #include "GameFramework/CharacterMovementComponent.h" // test 
 //#include "Runtime/Steam/SteamVR/Source/SteamVR/Classes/SteamVRChaperoneComponent.h"
 #include "MotionControllerComponent.h"

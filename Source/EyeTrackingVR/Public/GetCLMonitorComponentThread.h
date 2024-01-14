@@ -4,6 +4,11 @@
 #include "Kismet/GameplayStatics.h" 
 #include "Core/Public/HAL/RunnableThread.h"
 #include "Core/Public/HAL/Runnable.h"
+#include "HeadMountedDisplayTypes.h" 
+#include "HPGlia.h"
+#include "HPGliaClient.h"
+#include "IHeadMountedDisplay.h"
+#include "IXRTrackingSystem.h"
 #include "GameFramework/Actor.h"
 //#include "GetPlayerTraversePath.generated.h"
 
@@ -23,13 +28,26 @@ public:
 	virtual void Stop() override;
 	virtual void Exit() override;
 
+	void ConnectToDevice();
+	const FString clientID;
+	const FString accessKey;
+	const ELicensingModel requestedLicense = ELicensingModel::CORE;
+
+
+	FEyeTracking EyeData;
+	bool GetEyeTracking(FEyeTracking& OutEyeTracking);
+
+
 	bool bStopThread;
 private:
 	AGetCLMonitorComponentActor* CurrentThreadActor;
+	FXRHMDData HMDData;
+	UWorld* World = nullptr;
 
 protected:
 	// Called when the game starts or when spawned
 	FRunnableThread* Thread = nullptr;
+
 
 	// to save data 
 	int32 DataCount = 0;

@@ -33,7 +33,7 @@ public:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UWorld* getWorldReferenceFromActor();
+	UWorld* GetWorldReferenceFromActor();
 
 	/* to call end of thread */
 	void Stop();

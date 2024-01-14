@@ -64,9 +64,9 @@ void AGetCLMonitorComponentActor::EndPlay(EEndPlayReason::Type EndPlayReason)
 }
 
 
-UWorld* AGetCLMonitorComponentActor::getWorldReferenceFromActor()
+UWorld* AGetCLMonitorComponentActor::GetWorldReferenceFromActor()
 {
-	return nullptr;
+	return GEngine->GetWorld();
 }
 
 void AGetCLMonitorComponentActor::Stop()
