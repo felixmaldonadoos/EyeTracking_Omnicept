@@ -7,6 +7,7 @@
 #include "HeadMountedDisplayTypes.h" 
 #include "HPGlia.h"
 #include "HPGliaClient.h"
+#include "GetCLMonitorComponent.h"
 #include "IHeadMountedDisplay.h"
 #include "IXRTrackingSystem.h"
 #include "GameFramework/Actor.h"
@@ -38,8 +39,7 @@ public:
 	FEyeTracking EyeData;
 	bool GetEyeTracking(FEyeTracking& OutEyeTracking);
 
-
-	bool bStopThread;
+	bool bStopThread = false;
 private:
 	AGetCLMonitorComponentActor* CurrentThreadActor;
 	FXRHMDData HMDData;

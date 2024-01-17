@@ -4,6 +4,7 @@
 #include "GameModeMain.h"
 #include "PawnMain.h"
 #include "GameStateMain.h"
+#include "HPGlia.h"
 #include "MouseKeyboardPlayerController.h"
 
 AGameModeMain::AGameModeMain()
@@ -15,11 +16,11 @@ AGameModeMain::AGameModeMain()
 	GameStateClass = AGameStateMain::StaticClass();
 
 	/* assing default (for now) player controller */
-	PlayerControllerClass = AMouseKeyboardPlayerController::StaticClass(); 
+	PlayerControllerClass = AMouseKeyboardPlayerController::StaticClass();
 
 	/* standard defaults */
 	PrimaryActorTick.bStartWithTickEnabled = true;
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -80,4 +81,29 @@ void AGameModeMain::StartPlay()
 
 	AGameModeMain::SpawnGetCLMonitorComponentActor();
 
+	//const FString access_key = "F8OK38DWnRgqJgr5aaUhgcfBPHoEe5toBiDGGREkR2DWeZxgTKFpCF5YvAdnHd-S";
+	//const FString client_id = "25b17c6b-3386-45f8-9e1e-88d76259b5bf";
+	//UHPGliaClient::ConnectToGliaAsync(client_id, access_key, ELicensingModel::CORE);
+
+}
+
+void AGameModeMain::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//UHPGliaDelegates* gliaDelegates = UHPGliaClient::GetGliaDelegates();
+	//if (gliaDelegates == nullptr) {
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("GliaDelegates nullptr!"));
+	//	return;
+	//}
+
+	/*if (Monitor.GetData().Num() == 0) {
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("sample found"));
+	}*/
+
+	//TArray<float> samples = Monitor.GetData();
+	//if (samples.Num() != 0) {
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("sample found"));
+	//	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("Samples: %f"), samples.Num());
+	//}
 }

@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GetCLMonitorComponentActor.h"
+#include "CLMonitorComponent.h"
 //#include "PawnMain.h"
 //#include "Templates/SharedPointer.h" 
 #include "GameModeMain.generated.h"
@@ -13,6 +14,8 @@
 /**
  *
  */
+
+
 UCLASS()
 class EYETRACKINGVR_API AGameModeMain : public AGameModeBase
 {
@@ -36,7 +39,6 @@ protected:
 	//APawnMain* PlayerActor; 
 
 
-
 	/* Spawns Sensors */
 	void SpawnGetCLMonitorComponentActor();
 	AGetCLMonitorComponentActor* GetCLMonitorComponentActor = nullptr;
@@ -47,5 +49,6 @@ protected:
 	/* to store waypoint info  */
 	virtual void InitGameState();
 	virtual void StartPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 };
