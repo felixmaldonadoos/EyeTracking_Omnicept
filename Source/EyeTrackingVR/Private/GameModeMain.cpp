@@ -78,6 +78,9 @@ void AGameModeMain::StartPlay()
 {
 	Super::StartPlay();
 	UE_LOG(LogTemp, Warning, TEXT("[AGameModeMain::StartPlay()] Starting game!\n"));
+	FVector spawn_location = { 180.000000,-30.000000,30.000000};
+	FRotator spawn_rotation = { 0.0,0.0, 0.0};
+	AGameModeMain::SpawnAndPossessPlayer(spawn_location, spawn_rotation);
 
 	AGameModeMain::SpawnGetCLMonitorComponentActor();
 
