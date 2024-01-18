@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Kismet/GameplayStatics.h" 
 #include "Core/Public/HAL/RunnableThread.h"
@@ -48,6 +47,8 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	FRunnableThread* Thread = nullptr;
+
+	void ConvertCombinedGazeToLocation();
 
 
 	// to save data 

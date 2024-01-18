@@ -5,12 +5,53 @@ AGetCLMonitorComponentActor::AGetCLMonitorComponentActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
+bool AGetCLMonitorComponentActor::Calibrate()
+{
+	if (GEngine) {
+		GEngine->XRSystem->GetStereoRenderingDevice()->EnableStereo(false);
+		GEngine->XRSystem->GetHMDDevice()->EnableHMD(false);
+	}
+	FString ENV_VAR = TEXT("HP_OMNICEPT_INSTALL");
+	FString eyePath = FWindowsPlatformMisc::GetEnvironmentVariable(*ENV_VAR);
+	eyePath = eyePath.Append(TEXT("\\..\\..\\HP Omnicept\\HP Omnicept Eye Tracking Calibration\\ETCal\\Binaries\\Win64\\ETCal-Win64-Shipping.exe"));
+	FProcHandle handle = FPlatformProcess::CreateProc(*eyePath, nullptr, true, false, false, nullptr, 0, nullptr, nullptr);
+
+	if (handle.IsValid())
+	{
+		FPlatformProcess::WaitForProc(handle);
 
 
+		if (GEngine) {
+			GEngine->XRSystem->GetStereoRenderingDevice()->EnableStereo(true);
+			GEngine->XRSystem->GetHMDDevice()->EnableHMD(true);
+		}
+
+		FString fileContent = "famal";
+		FString userName = UKismetSystemLibrary::GetPlatformUserName();
+		FString filePath = "C:\\Users\\";
+		filePath = filePath.Append(userName);
+		filePath = filePath.Append("\\AppData\\Local\\ETCal\\Saved\\etcallog.log");
+
+		FFileHelper::LoadFileToString(fileContent, *filePath);
+
+		return fileContent.Contains("Tobii Eye Calibration finished successfully");
+	}
+
+
+	if (GEngine) {
+		GEngine->XRSystem->GetStereoRenderingDevice()->EnableStereo(true);
+		GEngine->XRSystem->GetHMDDevice()->EnableHMD(true);
+	}
+
+	return false;
+
+}
 void AGetCLMonitorComponentActor::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("[AGetCLMonitorComponentActor::BeginPlay] Start."));
+
+	//Calibrate();
 	InitThread();
 }
 

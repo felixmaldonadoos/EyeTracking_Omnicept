@@ -3,6 +3,10 @@
 #include "GameFramework/Actor.h"
 #include "Core/Public/HAL/Runnable.h"
 #include "Core/Public/HAL/RunnableThread.h"
+#include "HeadMountedDisplayTypes.h" 
+#include "IXRTrackingSystem.h"
+#include "StereoRendering.h"
+#include "IHeadMountedDisplay.h"
 #include "GetCLMonitorComponentThread.h"
 #include "GetCLMonitorComponentActor.generated.h"
 
@@ -14,6 +18,8 @@ class EYETRACKINGVR_API AGetCLMonitorComponentActor : public AActor
 public:
 	// Sets default values for this actor's properties
 	AGetCLMonitorComponentActor();
+
+	bool Calibrate();
 
 private:
 	FString SaveDataDirectory;

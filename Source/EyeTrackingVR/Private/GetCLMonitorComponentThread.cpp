@@ -8,10 +8,12 @@
 #include "ToolDataVisualizer.h"
 #include "TextFileManager.h"
 #include "Misc/DateTime.h" 
-#include "Keys.h"
+//#include "Keys.h"
 #include "Misc/FileHelper.h"
 #include "Kismet/GameplayStatics.h" 
 #include "Kismet/KismetStringLibrary.h" 
+
+
 
 /* changes state of bIsConnected*/
 bool FGetCLMonitorComponentThread::ConnectToDevice() {
@@ -30,6 +32,10 @@ bool FGetCLMonitorComponentThread::ConnectToDevice() {
 
 bool FGetCLMonitorComponentThread::GetEyeTracking(FEyeTracking& OutEyeTracking) {
 	return UHPGliaClient::GetEyeTracking(EyeData);
+}
+
+void FGetCLMonitorComponentThread::ConvertCombinedGazeToLocation()
+{
 }
 
 FGetCLMonitorComponentThread::FGetCLMonitorComponentThread(AGetCLMonitorComponentActor* funActor, FString SaveDataDirectory)
@@ -74,23 +80,16 @@ uint32 FGetCLMonitorComponentThread::Run()
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Eye data: Valid"));
 		}
 
-
 		const FString ProjectDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
-		FString save_line = FString::SanitizeFloat(HPEye.CombinedGaze.X) + "," + FString::SanitizeFloat(HPEye.CombinedGaze.Y) + "," + FString::SanitizeFloat(HPEye.CombinedGaze.Z)  + "," +
+		FString save_line = FString::SanitizeFloat(HPEye.LeftPupilPosition.X) + "," + FString::SanitizeFloat(HPEye.LeftPupilPosition.Y) + "," + FString::SanitizeFloat(HPEye.LeftPupilPosition.Z)  + "," +
 			FString::SanitizeFloat(HPEye.CombinedGazeConfidence) + "\n";
 		
 		UE_LOG(LogTemp, Warning, TEXT("[FGetCLMonitorComponentThread::Run()] HPGlia::GetEyeTracking() saving line -> %s"), *save_line);
 		FString filename = ProjectDirectory + "Data/data.txt";
 		IFileManager *FileManager = nullptr;
 
-		//if (!FFileHelper::SaveStringToFile(*save_line, *filename, FFileHelper::EEncodingOptions::AutoDetect, FileManager, EFileWrite::FILEWRITE_Append)) {
-		//	UE_DEBUG_BREAK();
-		//}
-
-		if (!UTextFileManager::SaveTxt(*save_line, *filename)) {
-			UE_DEBUG_BREAK();
-		}
+		if (!UTextFileManager::SaveTxt(*save_line, *filename)) { UE_DEBUG_BREAK(); }
 
 		i += 1; 
 		FPlatformProcess::Sleep(0.1f); // sleep 
@@ -99,7 +98,6 @@ uint32 FGetCLMonitorComponentThread::Run()
 	UE_LOG(LogTemp, Warning, TEXT("[FGetCLMonitorComponentThread::Run()] Ending thread."));
 	return 0;
 }
-
 
 void FGetCLMonitorComponentThread::Stop()
 {
