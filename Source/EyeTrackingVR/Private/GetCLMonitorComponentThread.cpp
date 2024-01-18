@@ -68,15 +68,18 @@ uint32 FGetCLMonitorComponentThread::Run()
 		
 		FEyeTracking HPEye;
 		if (!UHPGliaClient::GetEyeTracking(HPEye)) {
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Eye data: Not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Eye data: Not valid"));
 		}
 		else {
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Eye data: Valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Eye data: Valid"));
 		}
+
 
 		const FString ProjectDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
-		FString save_line = FString::SanitizeFloat(HPEye.LeftGaze.X) + "," + FString::SanitizeFloat(HPEye.LeftGaze.Y) + "," + FString::SanitizeFloat(HPEye.LeftGaze.Z) + "\n";
+		FString save_line = FString::SanitizeFloat(HPEye.CombinedGaze.X) + "," + FString::SanitizeFloat(HPEye.CombinedGaze.Y) + "," + FString::SanitizeFloat(HPEye.CombinedGaze.Z)  + "," +
+			FString::SanitizeFloat(HPEye.CombinedGazeConfidence) + "\n";
+		
 		UE_LOG(LogTemp, Warning, TEXT("[FGetCLMonitorComponentThread::Run()] HPGlia::GetEyeTracking() saving line -> %s"), *save_line);
 		FString filename = ProjectDirectory + "Data/data.txt";
 		IFileManager *FileManager = nullptr;
