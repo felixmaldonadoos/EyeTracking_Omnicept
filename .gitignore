@@ -5,7 +5,7 @@
 source/EyeTrackingVR/public/Keys.h
 
 # data
-Data/data.csv
+Data/*
 
 # Compiled Object files
 *.slo
