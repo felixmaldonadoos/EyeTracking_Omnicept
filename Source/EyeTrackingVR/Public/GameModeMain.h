@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GetCLMonitorComponentActor.h"
+#include "CLMonitorComponent.h"
+#include "ConfigManager.h"
 //#include "PawnMain.h"
 //#include "Templates/SharedPointer.h" 
 #include "GameModeMain.generated.h"
@@ -13,6 +12,8 @@
 /**
  *
  */
+
+
 UCLASS()
 class EYETRACKINGVR_API AGameModeMain : public AGameModeBase
 {
@@ -31,10 +32,13 @@ protected:
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
+	bool InitializeHPKeys();
+
 	/* spawning player */
+	FVector spawn_location_player  = { 180.000000,-30.000000,30.000000 };
+	FRotator spawn_rotation_player = { 0.0,0.0, 0.0 };
 	void SpawnAndPossessPlayer(FVector spawn_location, FRotator spawn_rotation);
 	//APawnMain* PlayerActor; 
-
 
 
 	/* Spawns Sensors */
@@ -47,5 +51,6 @@ protected:
 	/* to store waypoint info  */
 	virtual void InitGameState();
 	virtual void StartPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 };

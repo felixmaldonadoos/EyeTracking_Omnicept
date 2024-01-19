@@ -12,10 +12,11 @@ public:
     UGetCLMonitorComponent();
 
 protected:
+
+public:
     TArray<float> samples;
     float cogLoadAcum = 0;
 
-public:
     UFUNCTION(BlueprintCallable, Category = "Cognitive Load")
     void StartMonitoring();
     UFUNCTION(BlueprintCallable, Category = "Cognitive Load")

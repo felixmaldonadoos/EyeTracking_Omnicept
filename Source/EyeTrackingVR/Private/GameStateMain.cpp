@@ -6,7 +6,6 @@
 void AGameStateMain::HandleMatchHasStarted() {
 
 	//Super::HandleMatchHasStarted();
-	/* Called when the state transitions to InProgress */
 	UE_LOG(LogTemp, Error, TEXT("[AGameState_Main::HandleMatchHasStarted()] "));
 
 }
@@ -31,6 +30,6 @@ bool AGameStateMain::HasMatchStarted() const
 void AGameStateMain::HandleBeginPlay()
 {
 	Super::HandleBeginPlay();
-	UE_LOG(LogTemp, Error, TEXT("[AGameState_Main::HandleBeginPlay()] Trials to complete: "));
+	//UE_LOG(LogTemp, Error, TEXT("[AGameState_Main::HandleBeginPlay()] Trials to complete: "));
 
 }
