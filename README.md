@@ -1,8 +1,10 @@
+### NOTICE: 
+This repo will not be mantained anymore. My work is being pushed to my lab's repo: [cellworld/cellworld_vr](https://github.com/cellworld/cellword_vr) (1/19/2024)
+
 # EyeTracking_Omnicept
 
 Virtual Reality project for Unreal Engine 4.27 for testing the HP Reverb G2 VR Headset and OmniceptSDK. 
 
-<<<<<<< HEAD
 ## To do: 
 
 - save user head positions, rotations, etc for eye-tracking analysis (similar to FGetPlayerTraversePath)
@@ -10,16 +12,11 @@ Virtual Reality project for Unreal Engine 4.27 for testing the HP Reverb G2 VR H
 - test the calibration step again
 
 =======
->>>>>>> origin/master
 ## Omnicept SDK
 Very brief sensor description below. Make sure to carefully go over the [G2 system overview](https://developers.hp.com/omnicept/docs/fundamentals#system-overview).
 
 ### Eye-Tracking 
-<<<<<<< HEAD
 Cameras pointing at the user's left and right eye. The eye camera and eye-tracking on the HP Reverb G2 Omnicept eye-tracking uses Tobii systems (to do: add reference link).
-=======
-Cameras pointing at the user's left and right eye. The eye camera and eye-tracking on the HP Reverb G2 Omnicept edition is powered by Tobii
->>>>>>> origin/master
 
 ### Heart-Rate
 
