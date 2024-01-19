@@ -1,9 +1,11 @@
 #include "GetCLMonitorComponentActor.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 
 AGetCLMonitorComponentActor::AGetCLMonitorComponentActor()
 {
 	PrimaryActorTick.bStartWithTickEnabled = true;
-	PrimaryActorTick.bTickEvenWhenPaused   = true;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 bool AGetCLMonitorComponentActor::InitializeHPKeys() {
@@ -104,58 +106,103 @@ void AGetCLMonitorComponentActor::InitThread()
 	CurrentRunningThread = FRunnableThread::Create(WorkerThread, TEXT("t_GetCLMonitorComponentThread"));
 }
 
-bool AGetCLMonitorComponentActor::IsVectorAllZeros(const FVector& Vec)
+bool AGetCLMonitorComponentActor::IsVectorAllZeros(const FVector Vec)
 {
-	return Vec.IsZero();
+	return Vec.IsZero(); // true if zeros
 }
 
-bool AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(const FVector& Vec)
+bool AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(const FVector Vec)
 {
-	return FMath::IsNearlyEqual(Vec.X, -1.0f) && FMath::IsNearlyEqual(Vec.Y, -1.0f) && FMath::IsNearlyEqual(Vec.Z, -1.0f);
+	FVector NegOnes = { -1.0f,1.0f,-1.0f };
+	return Vec == NegOnes;
 }
 
-bool AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()
-{
-	/* make sure that the eye data array isn't empty */
-	if (!AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(eye_combined_gaze) ||
-		!AGetCLMonitorComponentActor::IsVectorAllZeros(eye_combined_gaze)) {
+bool AGetCLMonitorComponentActor::IsEyeDataValid(FVector Vec) {
+	if (AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(eye_combined_gaze) ||
+		AGetCLMonitorComponentActor::IsVectorAllZeros(eye_combined_gaze)) {
 		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] eye_combined_gaze not valid."));
 		return false;
 	}
-
-	/* check if game is running and world is valid*/
-	if (GEngine->GetWorld()) {
-		WorldRef = GEngine->GetWorld();
+	else {
+		return true;
+	}
+}
+bool AGetCLMonitorComponentActor::IsWorldValid(UWorld*& World) {
+	
+	if (GetWorld()) {
+		World = GetWorld();
+		return true;
 	}
 
-	/* get world reference */
-	if (!WorldRef) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] WorldRef == nullptr ."));
-		return false;
-	}
+	UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::IsWorldValid] GEngine->GetWorld() not valid."));
+	return false;
+}
 
+bool AGetCLMonitorComponentActor::GetPlayerCameraComponent(UCameraComponent*& Camera) {
 	/* get player controller */
 	MouseKeyboardPlayerController = Cast<AMouseKeyboardPlayerController>(UGameplayStatics::GetPlayerController(WorldRef, player_index));
 	if (!MouseKeyboardPlayerController) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] PlayerController == nullptr ."));
+		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] PlayerController == nullptr ."));
 		return false;
 	}
 
 	/* get pawn*/
 	Pawn = Cast<APawnMain>(MouseKeyboardPlayerController->GetPawn());
-	if (!Pawn) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] PawnMain == nullptr ."));
+	if (Pawn == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] PawnMain == nullptr ."));
+		return false;
+	}
+
+	/* new test */
+
+	Camera = Pawn->GetCameraComponent();
+	if (Camera == nullptr) {
+		return false;
+	}
+	/*
+	* 
+	* old 
+	* 
+	UE_LOG(LogTemp, Warning, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] PawnMain id: %s."), *Pawn->GetName());
+	CameraComponent = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
+	UActorComponent* ActorComponent = GetComponentByClass(UCameraComponent::StaticClass());
+	if (CameraComponent == nullptr) {
+		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] CameraComponent == nullptr ."));
+		return false;
+	}
+	*/
+
+	return true;
+}
+
+bool AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()
+{
+	/* make sure that the eye data array isn't empty */
+	if (!AGetCLMonitorComponentActor::IsEyeDataValid(eye_combined_gaze)) {
+		return false;
+	}
+
+	/* check if game is running and world is valid*/
+	if (!AGetCLMonitorComponentActor::IsWorldValid(WorldRef)) {
 		return false;
 	}
 
 	/* get camera component */
-	CameraComponent = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
-	if (!CameraComponent) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] CameraComponent == nullptr ."));
+	if (!AGetCLMonitorComponentActor::GetPlayerCameraComponent(CameraComponent)) {
 		return false;
 	}
 
+	/* start tracing */
+	const FVector trace_start = CameraComponent->GetComponentLocation();
+	const FVector trace_end = trace_start + UKismetMathLibrary::TransformDirection(CameraComponent->GetComponentTransform(), eye_combined_gaze)*250;
+	//const FVector trace_end = UKismetMathLibrary::TransformDirection(CameraComponent->GetComponentTransform(), eye_combined_gaze);
+	FHitResult hit_result;
+	FCollisionQueryParams collision_params;
+	GetWorld()->LineTraceSingleByChannel(hit_result, trace_start, trace_end, ECollisionChannel::ECC_Visibility, collision_params);
+	DrawDebugLine(GetWorld(), trace_start, trace_end, FColor::Red, false, 0.2);
+
 	/*psuedo:
+	* 
 	* get combined gaze vector
 	* get camera world transform
 	* start_location = GetWorldLocation(PlayerCamera)
@@ -174,7 +221,6 @@ void AGetCLMonitorComponentActor::Tick(float DeltaTime)
 	AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer();
 }
 
-
 void AGetCLMonitorComponentActor::EndPlay(EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
@@ -191,7 +237,6 @@ void AGetCLMonitorComponentActor::EndPlay(EEndPlayReason::Type EndPlayReason)
 	UE_LOG(LogTemp, Log, TEXT("[AGetCLMonitorComponentActor::EndPlay()] Calling Destroy()"));
 
 }
-
 
 UWorld* AGetCLMonitorComponentActor::GetWorldReferenceFromActor()
 {

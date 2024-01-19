@@ -91,6 +91,11 @@ void APawnMain::UpdateMovementComponent(FVector InputVector, bool bForce)
 
 }
 
+UCameraComponent* APawnMain::GetCameraComponent()
+{
+	return this->Camera;
+}
+
 void APawnMain::MoveForward(float AxisValue)
 {
 	if (AxisValue != 0.0f) {

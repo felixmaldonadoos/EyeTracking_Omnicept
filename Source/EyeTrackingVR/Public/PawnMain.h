@@ -84,4 +84,7 @@ public:
 	ETeleportType TeleportType = ETeleportType::None;
 	void UpdateMovementComponent(FVector InputVector, bool bForce);
 
+	/* helpers for camera stuff */
+	UCameraComponent* GetCameraComponent();
+
 };
