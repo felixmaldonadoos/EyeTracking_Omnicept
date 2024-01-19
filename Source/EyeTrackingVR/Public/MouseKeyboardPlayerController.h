@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "PawnMain.h"
-#include "GameModeMain.h"
 #include "MouseKeyboardPlayerController.generated.h"
 
 /**

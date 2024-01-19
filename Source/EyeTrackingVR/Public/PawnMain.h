@@ -13,10 +13,12 @@
 #include "Kismet/GameplayStatics.h" 
 #include "GameFramework/FloatingPawnMovement.h" 
 #include "GameFramework/CharacterMovementComponent.h" // test 
+
 //#include "Runtime/Steam/SteamVR/Source/SteamVR/Classes/SteamVRChaperoneComponent.h"
 #include "MotionControllerComponent.h"
-#include "GameModeMain.h"
 #include "PawnMain.generated.h"
+
+
 
 UCLASS()
 class EYETRACKINGVR_API APawnMain : public APawn
@@ -42,8 +44,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	AGameModeMain* GameMode = nullptr; 
+
+	//AGameModeMain* GameMode = nullptr; 
 
 public:
 	// Called every frame
@@ -57,16 +59,13 @@ public:
 	class UArrowComponent* Arrow;
 	class USkeletalMeshComponent* CharacterMesh;
 	class UCharacterMovementComponent* CharMoveComp;
-	//UPROPERTY(EditAnywhere, Category = "MotionController")
 	class UMotionControllerComponent* MotionControllerLeft;
 	class UMotionControllerComponent* MotionControllerLeftAim;
-	//UPROPERTY(EditAnywhere, Category = "MotionController")
 	class UMotionControllerComponent* MotionControllerRight;
 	class UMotionControllerComponent* MotionControllerRightAim;
 	class UWidgetInteractionComponent* WidgetInteractionLeft;
 	class UWidgetInteractionComponent* WidgetInteractionRight;
 	class UWidgetInteractionComponent* WidgetInteraction;
-	
 	
 	void SetupPlayerInputComponent(class UInputComponent* InInputComponent);
 

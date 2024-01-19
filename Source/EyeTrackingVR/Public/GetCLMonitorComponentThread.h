@@ -23,6 +23,8 @@ public:
 	FGetCLMonitorComponentThread(AGetCLMonitorComponentActor* funActor, FString SaveDataDirectory);
 	virtual ~FGetCLMonitorComponentThread();
 
+	FString GetVariableHeader();
+
 	// FRunnable functions 
 	virtual uint32 Run() override;
 	virtual void Stop() override;
@@ -39,8 +41,8 @@ public:
 	bool GetEyeTracking(FEyeTracking& OutEyeTracking);
 
 	bool bStopThread = false;
-private:
 	AGetCLMonitorComponentActor* CurrentThreadActor;
+private:
 	FXRHMDData HMDData;
 	UWorld* World = nullptr;
 

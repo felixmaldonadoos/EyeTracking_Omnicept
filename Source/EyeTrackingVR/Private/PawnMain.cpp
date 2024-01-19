@@ -1,5 +1,6 @@
 #pragma once
 #include "PawnMain.h"
+#include "GameModeMain.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Components/ArrowComponent.h"
@@ -18,6 +19,8 @@
 #include "PawnMainMovementComponent.h"
 
 // Sets default values
+AGameModeMain* GameMode; // forward declare to avoid circular dependency
+
 APawnMain::APawnMain() : Super()
 {
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -148,7 +151,6 @@ void APawnMain::BeginPlay()
 void APawnMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APawnMain::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

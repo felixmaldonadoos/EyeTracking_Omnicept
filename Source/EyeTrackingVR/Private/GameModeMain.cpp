@@ -2,7 +2,7 @@
 
 
 #include "GameModeMain.h"
-#include "PawnMain.h"
+#include "PawnMain.h" 
 #include "GameStateMain.h"
 #include "HPGlia.h"
 #include "MouseKeyboardPlayerController.h"
@@ -30,6 +30,23 @@ void AGameModeMain::EndMatch()
 	FGenericPlatformMisc::RequestExit(false);
 }
 
+/* 
+* Updates GameInstance with HP keys. Will use variables inside GameInstanceMain.h 
+* to find, load, and process the HP keys. 
+*/
+bool AGameModeMain::InitializeHPKeys() {
+	TArray<FString> hp_client_info; 
+	UWorld* World = nullptr;
+	UGameInstanceMain* GI = nullptr; 
+
+	if (GEngine) { World = GEngine->GetWorld(); }
+	else { return false;  }
+	if (World) { GI = Cast<UGameInstanceMain>(UGameplayStatics::GetGameInstance(World)); }
+	else { return false;  }
+
+	return UConfigManager::LoadHPClientKeys(GI, hp_client_info);
+}
+
 void AGameModeMain::SpawnAndPossessPlayer(FVector spawn_location, FRotator spawn_rotation)
 {
 	FActorSpawnParameters SpawnInfo;
@@ -50,7 +67,6 @@ void AGameModeMain::InitGameState()
 	Super::InitGameState();
 }
 
-
 void AGameModeMain::SpawnGetCLMonitorComponentActor()
 {
 	FTransform tSpawnTransform;
@@ -60,15 +76,12 @@ void AGameModeMain::SpawnGetCLMonitorComponentActor()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	GetCLMonitorComponentActor = Cast<AGetCLMonitorComponentActor>(GetWorld()->SpawnActor(AGetCLMonitorComponentActor::StaticClass(), &TempLoc, &TempRot, SpawnInfo));
-
 }
 
 void AGameModeMain::SpawnAllLoggingActor()
 {
-	/* cognitive load sensors */
-	AGameModeMain::SpawnGetCLMonitorComponentActor();
-
 	/* eye-tracker */
+	AGameModeMain::SpawnGetCLMonitorComponentActor();
 
 	/* player path */
 }
@@ -78,11 +91,16 @@ void AGameModeMain::StartPlay()
 {
 	Super::StartPlay();
 	UE_LOG(LogTemp, Warning, TEXT("[AGameModeMain::StartPlay()] Starting game!\n"));
-	FVector spawn_location = { 180.000000,-30.000000,30.000000};
-	FRotator spawn_rotation = { 0.0,0.0, 0.0};
-	AGameModeMain::SpawnAndPossessPlayer(spawn_location, spawn_rotation);
 
+	/* spawn player */
+	AGameModeMain::SpawnAndPossessPlayer(spawn_location_player, spawn_rotation_player);
+
+	/* spawn eyetracker monitor */
 	AGameModeMain::SpawnGetCLMonitorComponentActor();
+
+	//if (AGameModeMain::InitializeHPKeys()) {
+	//	UE_DEBUG_BREAK();
+	//}
 
 	//const FString access_key = "F8OK38DWnRgqJgr5aaUhgcfBPHoEe5toBiDGGREkR2DWeZxgTKFpCF5YvAdnHd-S";
 	//const FString client_id = "25b17c6b-3386-45f8-9e1e-88d76259b5bf";
@@ -94,19 +112,4 @@ void AGameModeMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//UHPGliaDelegates* gliaDelegates = UHPGliaClient::GetGliaDelegates();
-	//if (gliaDelegates == nullptr) {
-	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("GliaDelegates nullptr!"));
-	//	return;
-	//}
-
-	/*if (Monitor.GetData().Num() == 0) {
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("sample found"));
-	}*/
-
-	//TArray<float> samples = Monitor.GetData();
-	//if (samples.Num() != 0) {
-	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("sample found"));
-	//	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Green, TEXT("Samples: %f"), samples.Num());
-	//}
 }

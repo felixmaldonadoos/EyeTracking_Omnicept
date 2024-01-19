@@ -1,4 +1,5 @@
 #include "MouseKeyboardPlayerController.h"
+#include "GameModeMain.h"
 
 AMouseKeyboardPlayerController::AMouseKeyboardPlayerController()
 {
