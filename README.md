@@ -1,5 +1,6 @@
 ### NOTICE: 
-This repo will not be mantained anymore. My work is being pushed to my lab's repo: [cellworld/cellworld_vr](https://github.com/cellworld/cellword_vr) (1/19/2024)
+
+**This repo will not be mantained anymore. My work is being pushed to my lab's repo: [cellworld/cellworld_vr](https://github.com/cellworld/cellword_vr) (1/19/2024)**
 
 # EyeTracking_Omnicept
 
