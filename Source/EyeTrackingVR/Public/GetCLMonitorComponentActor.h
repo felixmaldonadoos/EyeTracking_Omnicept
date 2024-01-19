@@ -58,11 +58,12 @@ public:
 	const int player_index = 0;
 	bool IsVectorAllZeros(const FVector Vec);
 	bool IsVectorAllNegativeOnes(const FVector Vec);
-	bool DrawEyeTraceOnPlayer();
+	bool DrawEyeTraceOnPlayer(float DeltaTime);
 
 	/* helper functions for data  validation */
 	bool IsEyeDataValid(FVector Vec); 
 	bool IsWorldValid(UWorld*& World);
 	bool GetPlayerCameraComponent(UCameraComponent*& Camera);
+	bool IsTraceAvailable();
 
 };

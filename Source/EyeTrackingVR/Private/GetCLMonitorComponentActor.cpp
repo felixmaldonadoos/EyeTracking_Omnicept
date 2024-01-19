@@ -120,7 +120,7 @@ bool AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(const FVector Vec)
 bool AGetCLMonitorComponentActor::IsEyeDataValid(FVector Vec) {
 	if (AGetCLMonitorComponentActor::IsVectorAllNegativeOnes(eye_combined_gaze) ||
 		AGetCLMonitorComponentActor::IsVectorAllZeros(eye_combined_gaze)) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] eye_combined_gaze not valid."));
+		//UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()] eye_combined_gaze not valid."));
 		return false;
 	}
 	else {
@@ -134,7 +134,7 @@ bool AGetCLMonitorComponentActor::IsWorldValid(UWorld*& World) {
 		return true;
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::IsWorldValid] GEngine->GetWorld() not valid."));
+	//UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::IsWorldValid] GEngine->GetWorld() not valid."));
 	return false;
 }
 
@@ -154,71 +154,52 @@ bool AGetCLMonitorComponentActor::GetPlayerCameraComponent(UCameraComponent*& Ca
 	}
 
 	/* new test */
-
 	Camera = Pawn->GetCameraComponent();
 	if (Camera == nullptr) {
 		return false;
 	}
-	/*
-	* 
-	* old 
-	* 
-	UE_LOG(LogTemp, Warning, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] PawnMain id: %s."), *Pawn->GetName());
-	CameraComponent = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
-	UActorComponent* ActorComponent = GetComponentByClass(UCameraComponent::StaticClass());
-	if (CameraComponent == nullptr) {
-		UE_LOG(LogTemp, Error, TEXT("[AGetCLMonitorComponentActor::GetPlayerCameraComponent] CameraComponent == nullptr ."));
-		return false;
-	}
-	*/
 
 	return true;
 }
 
-bool AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer()
-{
+/* runs a couple steps before showing line trace */
+bool AGetCLMonitorComponentActor::IsTraceAvailable() {
 	/* make sure that the eye data array isn't empty */
-	if (!AGetCLMonitorComponentActor::IsEyeDataValid(eye_combined_gaze)) {
+	if (!AGetCLMonitorComponentActor::IsEyeDataValid(eye_combined_gaze) || (!AGetCLMonitorComponentActor::IsWorldValid(WorldRef)) || (!AGetCLMonitorComponentActor::GetPlayerCameraComponent(CameraComponent))) {
 		return false;
 	}
+	return true;
+}
 
-	/* check if game is running and world is valid*/
-	if (!AGetCLMonitorComponentActor::IsWorldValid(WorldRef)) {
-		return false;
-	}
+bool AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer(float DeltaTime)
+{
+	if (!AGetCLMonitorComponentActor::IsTraceAvailable()) { return false; }
 
-	/* get camera component */
-	if (!AGetCLMonitorComponentActor::GetPlayerCameraComponent(CameraComponent)) {
-		return false;
-	}
-
-	/* start tracing */
+	/* trace params  */
 	const FVector trace_start = CameraComponent->GetComponentLocation();
 	const FVector trace_end = trace_start + UKismetMathLibrary::TransformDirection(CameraComponent->GetComponentTransform(), eye_combined_gaze)*250;
-	//const FVector trace_end = UKismetMathLibrary::TransformDirection(CameraComponent->GetComponentTransform(), eye_combined_gaze);
 	FHitResult hit_result;
-	FCollisionQueryParams collision_params;
+	const FCollisionQueryParams collision_params;
 	GetWorld()->LineTraceSingleByChannel(hit_result, trace_start, trace_end, ECollisionChannel::ECC_Visibility, collision_params);
-	DrawDebugLine(GetWorld(), trace_start, trace_end, FColor::Red, false, 0.2);
 
-	/*psuedo:
-	* 
-	* get combined gaze vector
-	* get camera world transform
-	* start_location = GetWorldLocation(PlayerCamera)
-	* end_location   = start_location + TransformDirection(T,CombinedGazeVec)*magnitude(250)
-	*
-	*/
+	/* debug circle params */
+	const float draw_duration = DeltaTime/2; // same as tick, update per frame
+	const uint8 depth = 10; // to do: make this vary with pupil dilation and openess
+	const float radius = 0.5f;
+	const int segments = 5;
+	const uint8 depth_priority = 0;
+	const float thickness = 0.5;
 
-	/* remove the first sample */
+	//DrawDebugLine(GetWorld(), trace_start, trace_end, FColor::Red, false, draw_duration); // line following view direction
+	DrawDebugSphere(GetWorld(), trace_end, radius, segments, FColor::Red, false, 0.5f, draw_duration, thickness); // spehere showing view 
+
 	return true;
 }
 
 void AGetCLMonitorComponentActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Warning, TEXT("[AGetCLMonitorComponentActor::Tick()]"));
-	AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer();
+	AGetCLMonitorComponentActor::DrawEyeTraceOnPlayer(DeltaTime);
 }
 
 void AGetCLMonitorComponentActor::EndPlay(EEndPlayReason::Type EndPlayReason)

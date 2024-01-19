@@ -4,8 +4,8 @@
 # HP Keys
 source/EyeTrackingVR/public/Keys.h
 
-#data
-Data/*
+# data
+Data/data.csv
 
 # Compiled Object files
 *.slo

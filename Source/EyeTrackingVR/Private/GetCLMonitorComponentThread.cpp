@@ -100,7 +100,7 @@ uint32 FGetCLMonitorComponentThread::Run()
 	}
 
 	/* to do: change bStopThread to GS */
-	int i = 0; 
+	//int i = 0; 
 	while (!bStopThread) {
 
 		/* collect sample */
@@ -121,13 +121,12 @@ uint32 FGetCLMonitorComponentThread::Run()
 			FString::SanitizeFloat(HPEye.LeftEyeOpenness) + "," + FString::SanitizeFloat(HPEye.LeftEyeOpennessConfidence) + "," + FString::SanitizeFloat(HPEye.RightEyeOpenness) + "," + FString::SanitizeFloat(HPEye.RightEyeOpennessConfidence) + "\n";
 		
 		/* print eye data */
-		UE_LOG(LogTemp, Log, TEXT("[FGetCLMonitorComponentThread::Run()] HPGlia::GetEyeTracking() saving line -> %s"), *save_line);
+		//UE_LOG(LogTemp, Log, TEXT("[FGetCLMonitorComponentThread::Run()] HPGlia::GetEyeTracking() saving line -> %s"), *save_line);
 		IFileManager *FileManager = nullptr;
-
 		if (!UTextFileManager::SaveTxt(*save_line, *filename)) { UE_DEBUG_BREAK(); }
 
-		i += 1; 
-		FPlatformProcess::Sleep(0.1f); // sleep 
+		//i += 1; 
+		//FPlatformProcess::Sleep(0.1f); // sleep 
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("[FGetCLMonitorComponentThread::Run()] Ending thread."));
